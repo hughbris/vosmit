@@ -1,0 +1,12 @@
+Vosmit is a terrible name for a reworking of Openstreetmap Osmarender [1] XSL transforms, which present its data as SVG (Scalable Vector Graphics).
+
+The aim is partly to enhance what Osmarender does (eventually), and partly to learn more about SVG in a hands-on way.
+
+I had also hoped to use this project as a way to learn more XSLT 2.x, but on second thoughts XSLT 1.x is better because most browsers support it inline, which might open up possibilities. So here's to the greater good!
+
+It's not a fork of Osmarender because there's too much I want to change about the way Osmarender is written, so I'll start from scratch and maybe pull in some useful templates. I generally like Osmarender, just think it could be simpler, faster, and more capable.
+
+Vosmit might stand for Vectric OSM Interactive Tool, or it might not.
+
+-----------
+[1] http://wiki.openstreetmap.org/wiki/Osmarender
