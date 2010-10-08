@@ -1,0 +1,5 @@
+xsltproc render.xsl _data/moorooka.osm.xml 
+
+xsltproc --stringparam left 153.022926 --stringparam right 153.037292 --stringparam bottom -27.53328 --stringparam top -27.527372 render.xsl _data/moorooka.osm.xml 
+
+xsltproc --stringparam src http://api06.dev.openstreetmap.org/api/0.6/map?bbox=153.022926,-27.53328,-27.527372,153.037292 render.xsl _data/moorooka.osm.xml 
