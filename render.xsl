@@ -15,13 +15,14 @@
 
 -->
 
-<xsl:transform version="1.0"
+<xsl:transform version="1.1"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
     xmlns:dcterms="http://purl.org/dc/terms/"
     xmlns:skos="http://www.w3.org/2004/02/skos/core#"
 	xmlns:svg="http://www.w3.org/2000/svg"
+	xmlns:config="tag:osm.org,2010-09-30:config"
 	xmlns=""
 >
 <!-- the moronic null namespace is OSM's, thank you -->
@@ -38,7 +39,7 @@
 <xsl:variable name="api.endpoint">http://api.openstreetmap.org/api/0.6</xsl:variable>
 <!-- <xsl:variable name="api.endpoint">http://api06.dev.openstreetmap.org/api/0.6</xsl:variable> -->
 
-<!-- <xsl:include href="lib/common.xsl"/> -->
+<xsl:include href="lib/common.xsl"/>
 
 <xsl:param name="left" /> <!-- xs:type, value constraints --> <!-- 153.022926 -->
 <xsl:param name="bottom" /> <!-- -27.53328 -->
@@ -66,12 +67,33 @@
 <xsl:param name="src" select="concat($api.endpoint , '/map?bbox=' , $bbox.queryvalue)" /> <!-- this way, a provided $src will trump any bbox params provided -->
 <!-- http://api.openstreetmap.org/api/0.6/map?bbox=153.022926,-27.53328,153.037292,-27.527372 -->
 
+<xsl:variable name="data" select="document($src)" />
+
+<xsl:variable name="dimensions">
+	<xsl:call-template name="getDimensions">
+		<xsl:with-param name="bounds" select="$data/osm/bounds" />
+		<xsl:with-param name="minimumMapWidth" select="0.5" />
+		<xsl:with-param name="minimumMapHeight" select="0.5" />
+	</xsl:call-template>
+</xsl:variable>
+
+<xsl:variable name="centreX" select="round($dimensions/config:dimensions/config:svgWidth div 2)" />
+<xsl:variable name="centreY" select="round($dimensions/config:dimensions/config:svgHeight div 2)" />
+
 <xsl:template match="/osm">
-	<svg:svg>
+	<svg:svg
+		width="{$dimensions/config:dimensions/config:svgWidth}px"
+		height="{$dimensions/config:dimensions/config:svgHeight}px"
+	>
 		<!-- insert metadata here: src, title, coverage (duh) etc -->
-		<svg:circle r="50"/> <!-- FIXME: stub -->
+		<svg:circle r="50" cx="{$centreX}" cy="{$centreY}" /> <!-- FIXME: stub -->
 		<xsl:comment>
-			<xsl:value-of select="$src" />
+			Src: <xsl:value-of select="$src" />.
+			Bounds minlat: <xsl:value-of select="$data/osm/bounds/@minlat" />.
+			projection: <xsl:value-of select="$dimensions/config:dimensions/config:projection" />.
+			svgWidth: <xsl:value-of select="$dimensions/config:dimensions/config:svgWidth" />.
+			svgHeight: <xsl:value-of select="$dimensions/config:dimensions/config:svgHeight" />.
+			Km: <xsl:value-of select="$dimensions/config:dimensions/config:km" />.
 		</xsl:comment>
 	</svg:svg>
 </xsl:template>
