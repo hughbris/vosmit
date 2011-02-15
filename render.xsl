@@ -15,7 +15,7 @@
 
 -->
 
-<xsl:transform version="1.0"
+<xsl:transform version="1.1"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
@@ -23,7 +23,9 @@
     xmlns:skos="http://www.w3.org/2004/02/skos/core#"
 	xmlns:svg="http://www.w3.org/2000/svg"
 	xmlns:config="tag:osm.org,2010-09-30:config"
-	xmlns=""
+	xmlns:exslt="http://exslt.org/common"
+	exclude-result-prefixes="exslt #default"
+  	xmlns=""
 >
 <!-- the moronic null namespace is OSM's, thank you -->
 
@@ -42,34 +44,34 @@
 
 <xsl:include href="lib/common.xsl"/>
 
-<xsl:variable name="dimensions">
-	<xsl:call-template name="getDimensions">
-		<xsl:with-param name="bounds" select="/osm/bounds" />
+<xsl:variable name="dimensionsDocument">
+	<xsl:apply-templates select="/osm/bounds" mode="dimensions">
 		<xsl:with-param name="minimumMapWidth" select="0.5" />
 		<xsl:with-param name="minimumMapHeight" select="0.5" />
-	</xsl:call-template>
+	</xsl:apply-templates>
 </xsl:variable>
 
-<!--
-<xsl:variable name="centreX" select="round($dimensions/config:dimensions/config:svgWidth div 2)" />
-<xsl:variable name="centreY" select="round($dimensions/config:dimensions/config:svgHeight div 2)" />
--->
-<xsl:variable name="centreX" select="'dummyX'" />
-<xsl:variable name="centreY" select="'dummyY'" />
+<xsl:variable name="dimensions" select="exslt:node-set($dimensionsDocument)/*" />
+
+<xsl:variable name="centreX" select="round($dimensions/config:svgWidth div 2)" />
+<xsl:variable name="centreY" select="round($dimensions/config:svgHeight div 2)" />
 
 <xsl:template match="/osm">
 	<svg:svg
-		width="{$dimensions/config:dimensions/config:svgWidth}px"
-		height="{$dimensions/config:dimensions/config:svgHeight}px"
+		width="{$dimensions/config:svgWidth}px"
+		height="{$dimensions/config:svgHeight}px"
 	>
+
+<xsl:message><xsl:value-of select="count($dimensions/*)" /></xsl:message>
+
 		<!-- insert metadata here: src, title, coverage (duh) etc -->
 		<svg:circle r="50" cx="{$centreX}" cy="{$centreY}" /> <!-- FIXME: stub -->
 		<xsl:comment>
 			Bounds minlat: <xsl:value-of select="/osm/bounds/@minlat" />.
-			projection: <xsl:value-of select="$dimensions/config:dimensions/config:projection" />.
-			svgWidth: <xsl:value-of select="$dimensions/config:dimensions/config:svgWidth" />.
-			svgHeight: <xsl:value-of select="$dimensions/config:dimensions/config:svgHeight" />.
-			Km: <xsl:value-of select="$dimensions/config:dimensions/config:km" />.
+			projection: <xsl:value-of select="$dimensions/config:projection" />.
+			svgWidth: <xsl:value-of select="$dimensions/config:svgWidth" />.
+			svgHeight: <xsl:value-of select="$dimensions/config:svgHeight" />.
+			Km: <xsl:value-of select="$dimensions/config:km" />.
 		</xsl:comment>
 	</svg:svg>
 </xsl:template>

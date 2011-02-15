@@ -10,8 +10,7 @@
 This module contains code adapted but pretty well copied from Osmarender: http://trac.openstreetmap.org/browser/applications/rendering/osmarender. Please refer there for any licensing information.
 -->
 
-<xsl:template name="getDimensions">
-	<xsl:param name="bounds" />
+<xsl:template match="bounds" mode="dimensions">
 	<xsl:param name="minimumMapWidth" />
 	<xsl:param name="minimumMapHeight" />
 	<xsl:param name="settings" /> <!-- not in use -->
@@ -25,10 +24,10 @@ This module contains code adapted but pretty well copied from Osmarender: http:/
 
 	<config:dimensions>
 		<!-- Derive the latitude of the middle of the map -->
-		<xsl:variable name="middleLatitude" select="($bounds/@maxlat + $bounds/@minlat) div 2.0"/>
+		<xsl:variable name="middleLatitude" select="(@maxlat + @minlat) div 2"/>
 		<!--woohoo lets do trigonometry in xslt -->
 		<!--convert latitude to radians -->
-		<xsl:variable name="latr" select="$middleLatitude * 3.1415926 div 180.0"/>
+		<xsl:variable name="latr" select="$middleLatitude * 3.1415926 div 180"/>
 		<!--taylor series: two terms is 1% error at lat<68 and 10% error lat<83. we probably need polar projection by then -->
 		<xsl:variable name="coslat" select="1 - ($latr * $latr) div 2 + ($latr * $latr * $latr * $latr) div 24"/>
 		<xsl:variable name="projection" select="1 div $coslat"/>
@@ -37,8 +36,8 @@ This module contains code adapted but pretty well copied from Osmarender: http:/
 			<xsl:value-of select="$projection" />
 		</config:projection>
 
-		<xsl:variable name="dataWidth" select="(number($bounds/@maxlon)-number($bounds/@minlon))*10000*$scale"/>
-		<xsl:variable name="dataHeight" select="(number($bounds/@maxlat)-number($bounds/@minlat))*10000*$scale*$projection"/>
+		<xsl:variable name="dataWidth" select="(number(@maxlon)-number(@minlon))*10000*$scale"/>
+		<xsl:variable name="dataHeight" select="(number(@maxlat)-number(@minlat))*10000*$scale*$projection"/>
 		<xsl:variable name="km" select="(0.0089928*$scale*10000*$projection)"/>
 
 		<config:km>
