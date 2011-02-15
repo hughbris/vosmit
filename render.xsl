@@ -54,14 +54,23 @@
 <xsl:param name="minimumMapHeight" select="3" /> <!-- kilometres -->
 <!-- **************************** -->
 
+<!-- will hardcode $scale to 1 until I understand better what it's scaling -->
+<xsl:param name="scale" select="1" />
+
 <xsl:variable name="dimensionsDocument">
 	<xsl:apply-templates select="/osm/bounds" mode="dimensions">
 		<xsl:with-param name="minimumMapWidth" select="$minimumMapWidth" />
 		<xsl:with-param name="minimumMapHeight" select="$minimumMapHeight" />
+		<xsl:with-param name="scale" select="$scale" />
 	</xsl:apply-templates>
 </xsl:variable>
-
 <xsl:variable name="dimensions" select="exslt:node-set($dimensionsDocument)/*" />
+
+<!-- some convenience variables -->
+<xsl:variable name="bound.north" select="/osm/bounds/@maxlat" />
+<xsl:variable name="bound.south" select="/osm/bounds/@minlat" />
+<xsl:variable name="bound.east" select="/osm/bounds/@maxlon" />
+<xsl:variable name="bound.west" select="/osm/bounds/@minlon" />
 
 <xsl:variable name="centreX" select="round($dimensions/config:svgWidth div 2)" />
 <xsl:variable name="centreY" select="round($dimensions/config:svgHeight div 2)" />
@@ -73,15 +82,30 @@
 	>
 
 		<!-- insert metadata here: src, title, coverage (duh) etc -->
-		<svg:circle r="50" cx="{$centreX}" cy="{$centreY}" /> <!-- FIXME: stub -->
+
+		<xsl:apply-templates select="node[@changeset='655764']" mode="testing" /> <!-- FIXME: test predicate -->
+
+		<!-- FIXME: debug output -->
 		<xsl:comment>
-			Bounds minlat: <xsl:value-of select="/osm/bounds/@minlat" />.
+			Bounds minlat: <xsl:value-of select="$bound.south" />.
 			projection: <xsl:value-of select="$dimensions/config:projection" />.
 			svgWidth: <xsl:value-of select="$dimensions/config:svgWidth" />.
 			svgHeight: <xsl:value-of select="$dimensions/config:svgHeight" />.
 			Km: <xsl:value-of select="$dimensions/config:km" />.
 		</xsl:comment>
 	</svg:svg>
+</xsl:template>
+
+<xsl:template match="node" mode="testing">
+	<!-- position calcs shameless adapted from osma -->
+    <xsl:variable name="posX" select="$dimensions/config:width - ( ($bound.east - @lon ) * 10000 * $scale )" />
+    <xsl:variable name="posY" select="$dimensions/config:height + ( ($bound.south - @lat) * 10000 * $scale * $dimensions/config:projection )" />
+	<svg:circle class="node" cx="{$posX}" cy="{$posY}" r="1" />
+	<svg:text class="label" x="{number($posX)+1}" y="{$posY}">
+		<xsl:value-of select="@lat" />
+		<xsl:text>,</xsl:text>
+		<xsl:value-of select="@lon" />
+	</svg:text>
 </xsl:template>
 
 </xsl:transform>

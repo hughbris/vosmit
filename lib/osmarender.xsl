@@ -14,9 +14,8 @@ This module contains code adapted but pretty well copied from Osmarender: http:/
 	<xsl:param name="minimumMapWidth" />
 	<xsl:param name="minimumMapHeight" />
 	<xsl:param name="settings" /> <!-- not in use -->
+	<xsl:param name="scale" select="1" />
 
-	<!-- will hardcode $scale to 1 until I understand better what it's scaling -->
-	<xsl:variable name="scale" select="1" />
 	<!-- and these to 0 for the same reason -->
 	<xsl:variable name="extraWidth" select="0" />
 	<xsl:variable name="marginaliaTopHeight" select="0" />
@@ -67,8 +66,16 @@ This module contains code adapted but pretty well copied from Osmarender: http:/
 			</xsl:choose>
 		</xsl:variable>
 
+		<!-- I don't know exactly what these are the width and height of, or in which units, but faithfully copying -->
 		<xsl:variable name="width" select="($documentWidth div 2) + ($dataWidth div 2)"/>
 		<xsl:variable name="height" select="($documentHeight div 2) + ($dataHeight div 2)"/>
+
+		<config:width>
+			<xsl:value-of select="$width" />
+		</config:width>
+		<config:height>
+			<xsl:value-of select="$height" />
+		</config:height>
 
 		<xsl:variable name="svgWidth" select="ceiling($documentWidth + $extraWidth)"/>
 		<xsl:variable name="svgHeight" select="ceiling($documentHeight + $marginaliaTopHeight + $marginaliaBottomHeight)"/>
