@@ -16,16 +16,16 @@
 -->
 
 <xsl:transform version="1.1"
-    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
-    xmlns:dcterms="http://purl.org/dc/terms/"
-    xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+	xmlns:dcterms="http://purl.org/dc/terms/"
+	xmlns:skos="http://www.w3.org/2004/02/skos/core#"
 	xmlns:svg="http://www.w3.org/2000/svg"
 	xmlns:config="tag:osm.org,2010-09-30:config"
 	xmlns:exslt="http://exslt.org/common"
 	exclude-result-prefixes="exslt #default"
-  	xmlns=""
+	xmlns=""
 >
 <!-- the moronic null namespace is OSM's, thank you -->
 
@@ -61,8 +61,6 @@
 		width="{$dimensions/config:svgWidth}px"
 		height="{$dimensions/config:svgHeight}px"
 	>
-
-<xsl:message><xsl:value-of select="count($dimensions/*)" /></xsl:message>
 
 		<!-- insert metadata here: src, title, coverage (duh) etc -->
 		<svg:circle r="50" cx="{$centreX}" cy="{$centreY}" /> <!-- FIXME: stub -->
