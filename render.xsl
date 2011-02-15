@@ -81,9 +81,22 @@
 		height="{$dimensions/config:svgHeight}px"
 	>
 
+		<!-- FIXME: try to farm this out to an external file or do something clever to import it so it's not embedded here (actually that's really important) -->
+		<svg:style type="text/css">
+			.node.test {
+				fill: red;
+			}
+			.test#nd655764 {
+				fill: green;
+			}
+			.label.test {
+				stroke: blue;
+			}
+		</svg:style>
+
 		<!-- insert metadata here: src, title, coverage (duh) etc -->
 
-		<xsl:apply-templates select="node[@changeset='655764']" mode="testing" /> <!-- FIXME: test predicate -->
+		<xsl:apply-templates select="node" mode="testing" /> <!-- FIXME: test predicate [@changeset='655764'] -->
 
 		<!-- FIXME: debug output -->
 		<xsl:comment>
@@ -100,12 +113,14 @@
 	<!-- position calcs shameless adapted from osma -->
     <xsl:variable name="posX" select="$dimensions/config:width - ( ($bound.east - @lon ) * 10000 * $scale )" />
     <xsl:variable name="posY" select="$dimensions/config:height + ( ($bound.south - @lat) * 10000 * $scale * $dimensions/config:projection )" />
-	<svg:circle class="node" cx="{$posX}" cy="{$posY}" r="1" />
-	<svg:text class="label" x="{number($posX)+1}" y="{$posY}">
+	<svg:circle class="node test" id="nd{@changeset}" cx="{$posX}" cy="{$posY}" r="1" />
+<!--
+	<svg:text class="label test" x="{number($posX)+1}" y="{$posY}">
 		<xsl:value-of select="@lat" />
 		<xsl:text>,</xsl:text>
 		<xsl:value-of select="@lon" />
 	</svg:text>
+-->
 </xsl:template>
 
 </xsl:transform>
