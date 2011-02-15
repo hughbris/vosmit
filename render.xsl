@@ -24,10 +24,12 @@
 	xmlns:svg="http://www.w3.org/2000/svg"
 	xmlns:config="tag:osm.org,2010-09-30:config"
 	xmlns:exslt="http://exslt.org/common"
-	exclude-result-prefixes="exslt #default"
+	exclude-result-prefixes="exslt #default config"
 	xmlns=""
 >
+
 <!-- the moronic null namespace is OSM's, thank you -->
+<!-- <xsl:namespace-alias stylesheet-prefix="svg" result-prefix="#default"/> -->
 
 <xsl:output
 	method="xml"
@@ -44,10 +46,18 @@
 
 <xsl:include href="lib/common.xsl"/>
 
+<!-- **************************** -->
+<!-- osma settings, documented at http://wiki.openstreetmap.org/wiki/Osmarender/Options -->
+
+<!-- "These settings override the normal bounding box settings to set the minimum size of the map canvas. The size is specified in kilometers, which is also the size of the grid boxes. If the map to be rendered is smaller than these settings it will be centered on the canvas." -->
+<xsl:param name="minimumMapWidth" select="3" /> <!-- kilometres -->
+<xsl:param name="minimumMapHeight" select="3" /> <!-- kilometres -->
+<!-- **************************** -->
+
 <xsl:variable name="dimensionsDocument">
 	<xsl:apply-templates select="/osm/bounds" mode="dimensions">
-		<xsl:with-param name="minimumMapWidth" select="0.5" />
-		<xsl:with-param name="minimumMapHeight" select="0.5" />
+		<xsl:with-param name="minimumMapWidth" select="$minimumMapWidth" />
+		<xsl:with-param name="minimumMapHeight" select="$minimumMapHeight" />
 	</xsl:apply-templates>
 </xsl:variable>
 

@@ -36,13 +36,14 @@ This module contains code adapted but pretty well copied from Osmarender: http:/
 			<xsl:value-of select="$projection" />
 		</config:projection>
 
-		<xsl:variable name="dataWidth" select="(number(@maxlon)-number(@minlon))*10000*$scale"/>
-		<xsl:variable name="dataHeight" select="(number(@maxlat)-number(@minlat))*10000*$scale*$projection"/>
 		<xsl:variable name="km" select="(0.0089928*$scale*10000*$projection)"/>
 
 		<config:km>
 			<xsl:value-of select="$km" />
 		</config:km>
+
+		<xsl:variable name="dataWidth" select="(number(@maxlon)-number(@minlon))*10000*$scale"/>
+		<xsl:variable name="dataHeight" select="(number(@maxlat)-number(@minlat))*10000*$scale*$projection"/>
 
 		<xsl:variable name="documentWidth">
 			<xsl:choose>
