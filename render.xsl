@@ -87,16 +87,16 @@
 			.node.test {
 				fill: red;
 			}
-			.node.label.test {
-				stroke: blue;
+			.label.test {
+				fill: blue;
 			}
-			.way.test {
+			.way.line.test {
 				fill: none;
 				stroke: pink;
 			}
 			.way.label.test {
-				stroke: blue;
-				font-size: smaller;
+				font-size: 6px;
+				font-variant: small-caps;
 			}
 		</svg:style>
 
@@ -158,11 +158,16 @@
 </xsl:template>
 
 <xsl:template match="way" mode="testing">
-	<svg:use xlink:href="#wy{@id}" class="way test ed{@changeset}" />
+	<svg:use xlink:href="#wy{@id}" class="way line test ed{@changeset}" />
 	<!-- label -->
-	<svg:text class="label test">
-		<svg:textPath xlink:href="#wy{@id}">
-			<xsl:value-of select="tag[@k='name']/@v" />
+	<xsl:apply-templates select="tag[@k='name']" mode="label" />
+</xsl:template>
+
+<xsl:template match="way/tag" mode="label">
+	<!-- TODO: lots: offset it/overlay it, scale it -->
+	<svg:text class="way label test">
+		<svg:textPath xlink:href="#wy{../@id}">
+			<xsl:value-of select="@v" />
 		</svg:textPath>
 	</svg:text>
 </xsl:template>
