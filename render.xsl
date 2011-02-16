@@ -86,17 +86,19 @@
 			.node.test {
 				fill: red;
 			}
-			.test#nd655764 {
-				fill: green;
-			}
 			.label.test {
 				stroke: blue;
+			}
+			.way.test {
+				fill: none;
+				stroke: pink;
 			}
 		</svg:style>
 
 		<!-- insert metadata here: src, title, coverage (duh) etc -->
 
-		<xsl:apply-templates select="node" mode="testing" /> <!-- FIXME: test predicate [@changeset='655764'] -->
+		<!-- <xsl:apply-templates select="node" mode="testing" /> --> <!-- FIXME: test predicate [@changeset='655764'] -->
+		<xsl:apply-templates select="way" mode="testing" /> <!-- FIXME: test predicate [@changeset='3756370'] -->
 
 		<!-- FIXME: debug output -->
 		<xsl:comment>
@@ -113,7 +115,37 @@
 	<!-- position calcs shameless adapted from osma -->
     <xsl:variable name="posX" select="$dimensions/config:width - ( ($bound.east - @lon ) * 10000 * $scale )" />
     <xsl:variable name="posY" select="$dimensions/config:height + ( ($bound.south - @lat) * 10000 * $scale * $dimensions/config:projection )" />
-	<svg:circle class="node test" id="nd{@changeset}" cx="{$posX}" cy="{$posY}" r="1" />
+	<svg:circle class="node test ed{@changeset}" id="nd{@id}" cx="{$posX}" cy="{$posY}" r="1" />
+<!--
+	<svg:text class="label test" x="{number($posX)+1}" y="{$posY}">
+		<xsl:value-of select="@lat" />
+		<xsl:text>,</xsl:text>
+		<xsl:value-of select="@lon" />
+	</svg:text>
+-->
+</xsl:template>
+
+<xsl:template match="way/nd" mode="path">
+	<!-- replace this lookup with a key lookup -->
+	<xsl:variable name="ref" select="@ref" />
+	<xsl:variable name="node" select="/osm/node[@id=$ref]" />
+	<xsl:text> </xsl:text>
+    <xsl:value-of select="round($dimensions/config:width - ( ($bound.east - $node/@lon ) * 10000 * $scale ))" />
+	<xsl:text>,</xsl:text>
+    <xsl:value-of select="round($dimensions/config:height + ( ($bound.south - $node/@lat) * 10000 * $scale * $dimensions/config:projection ))" />
+</xsl:template>
+
+<xsl:template match="way" mode="testing">
+	<!-- position calcs shameless adapted from osma -->
+    <xsl:variable name="posX" select="$dimensions/config:width - ( ($bound.east - @lon ) * 10000 * $scale )" />
+    <xsl:variable name="posY" select="$dimensions/config:height + ( ($bound.south - @lat) * 10000 * $scale * $dimensions/config:projection )" />
+	<svg:path class="way test ed{@changeset}" id="wy{@id}">
+		<xsl:attribute name="d">
+			<xsl:text>M</xsl:text>
+			<xsl:apply-templates select="nd" mode="path" />
+		</xsl:attribute>
+	</svg:path>
+	<!-- label -->
 <!--
 	<svg:text class="label test" x="{number($posX)+1}" y="{$posY}">
 		<xsl:value-of select="@lat" />
