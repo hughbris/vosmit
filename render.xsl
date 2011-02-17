@@ -149,6 +149,13 @@
 
 <xsl:template match="way" mode="defs">
 	<!-- position calcs shameless adapted from osma -->
+	<!--
+		Would prefer these calcs were coded in one place, also want to make sure they aren't run more than once per node.
+		Ideally, would build a calculated index for them but can't seem to do that with xsl:key.
+		svg:use from svg:defs (like for ways) is not an option for nodes because they may be marked up using several kinds of svg elements (circle, line, square etc) all of which use different co-ordinate attributes.
+		May be that positions for nodes aren't called relatively often enough to be a concern.
+		Would need XSLT 2.0 to make a custom XPath(-style?) function, but a template will do it in 1.x, albeit verbosely.
+	-->
     <xsl:variable name="posX" select="$dimensions/config:width - ( ($bound.east - @lon ) * 10000 * $scale )" />
     <xsl:variable name="posY" select="$dimensions/config:height + ( ($bound.south - @lat) * 10000 * $scale * $dimensions/config:projection )" />
 	<svg:path id="obj{@id}">
