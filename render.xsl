@@ -28,6 +28,7 @@
 	exclude-result-prefixes="exslt #default config"
 	xmlns=""
 >
+<!-- FIXME: is there a doctype/namespace where svg+rdfa will validate? -->
 
 <!-- the moronic null namespace is OSM's, thank you -->
 <!-- <xsl:namespace-alias stylesheet-prefix="svg" result-prefix="#default"/> -->
@@ -90,11 +91,11 @@
 			.label.test {
 				fill: blue;
 			}
-			.way.line.test {
+			.way .line.test {
 				fill: none;
 				stroke: pink;
 			}
-			.way.label.test {
+			.way .label.test {
 				font-size: 6px;
 				font-variant: small-caps;
 			}
@@ -149,7 +150,7 @@
 	<!-- position calcs shameless adapted from osma -->
     <xsl:variable name="posX" select="$dimensions/config:width - ( ($bound.east - @lon ) * 10000 * $scale )" />
     <xsl:variable name="posY" select="$dimensions/config:height + ( ($bound.south - @lat) * 10000 * $scale * $dimensions/config:projection )" />
-	<svg:path id="wy{@id}">
+	<svg:path id="obj{@id}">
 		<xsl:attribute name="d">
 			<xsl:text>M</xsl:text>
 			<xsl:apply-templates select="nd" mode="path" />
@@ -158,15 +159,18 @@
 </xsl:template>
 
 <xsl:template match="way" mode="testing">
-	<svg:use xlink:href="#wy{@id}" class="way line test ed{@changeset}" />
-	<!-- label -->
-	<xsl:apply-templates select="tag[@k='name']" mode="label" />
+	<svg:g id="wy{@id}" class="way">
+		<!-- TODO: we want to associate the OSM object URI here for sure -->
+		<!-- TODO: further rdfa metadata here from tags -->
+		<svg:use xlink:href="#obj{@id}" class="line test ed{@changeset}" />
+		<xsl:apply-templates select="tag[@k='name']" mode="label" /> <!-- label -->
+	</svg:g>
 </xsl:template>
 
 <xsl:template match="way/tag" mode="label">
 	<!-- TODO: lots: offset it/overlay it, scale it -->
-	<svg:text class="way label test">
-		<svg:textPath xlink:href="#wy{../@id}">
+	<svg:text class="label test" about="#wy{../@id}">
+		<svg:textPath xlink:href="#obj{../@id}" property="dc:title"> <!-- FIXME: what knowledge I once had of RDFa and its context rules are out the window, this is likely wrong -->
 			<xsl:value-of select="@v" />
 		</svg:textPath>
 	</svg:text>
