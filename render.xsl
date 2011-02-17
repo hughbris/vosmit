@@ -171,7 +171,7 @@
 <xsl:template match="way/tag" mode="label">
 	<!-- TODO: lots: offset it/overlay it, scale it -->
 	<svg:text class="label test" about="#wy{../@id}">
-		<svg:textPath xlink:href="#obj{../@id}" property="dc:title"> <!-- FIXME: what knowledge I once had of RDFa and its context rules are out the window, this is likely wrong -->
+		<svg:textPath xlink:href="#obj{../@id}" property="dcterms:title"> <!-- FIXME: what knowledge I once had of RDFa and its context rules are out the window, this is likely wrong -->
 			<xsl:value-of select="@v" />
 		</svg:textPath>
 	</svg:text>
