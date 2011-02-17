@@ -110,7 +110,7 @@
 			<xsl:apply-templates select="way" mode="defs" />
 		</svg:defs>
 
-		<xsl:apply-templates select="way[@changeset='3756370']" mode="testing" /> <!-- test predicate [@changeset='3756370'] -->
+		<xsl:apply-templates select="way" mode="testing" /> <!-- test predicate [@changeset='3756370'] -->
 
 		<!-- FIXME: debug output -->
 		<xsl:comment>
@@ -171,7 +171,7 @@
 		<!-- TODO: we want to associate the OSM object URI here for sure -->
 		<!-- TODO: further rdfa metadata here from tags -->
 		<svg:use xlink:href="#obj{@id}" class="line test ed{@changeset}" />
-		<xsl:apply-templates select="tag[@k='name']" mode="label" /> <!-- label -->
+		<!-- <xsl:apply-templates select="tag[@k='name']" mode="label" /> --> <!-- label -->
 	</svg:g>
 </xsl:template>
 
