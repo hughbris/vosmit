@@ -24,9 +24,10 @@
 	xmlns:skos="http://www.w3.org/2004/02/skos/core#"
 	xmlns:svg="http://www.w3.org/2000/svg"
 	xmlns:config="tag:osm.org,2010-09-30:config"
-	xmlns:exslt="http://exslt.org/common"
+	xmlns:exsl="http://exslt.org/common"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
-	exclude-result-prefixes="exslt #default config"
+	exclude-result-prefixes="exsl #default config"
+	extension-element-prefixes="exsl"
 	xmlns=""
 >
 <!-- FIXME: is there a doctype/namespace where svg+rdfa will validate? -->
@@ -67,7 +68,7 @@
 		<xsl:with-param name="scale" select="$scale" />
 	</xsl:apply-templates>
 </xsl:variable>
-<xsl:variable name="dimensions" select="exslt:node-set($dimensionsDocument)/*" />
+<xsl:variable name="dimensions" select="exsl:node-set($dimensionsDocument)/*" />
 
 <!-- some convenience variables -->
 <xsl:variable name="bound.north" select="/osm/bounds/@maxlat" />
