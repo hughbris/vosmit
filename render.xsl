@@ -10,6 +10,8 @@
 	/ draw ways as basic lines
 	. play with photo underlays and compare
 	- experiment with customisation frameworks (css, icons etc)
+		- customise area fills
+		- pull icons from a manifest
 	- play with interactivity
 	- play with put/post
 
