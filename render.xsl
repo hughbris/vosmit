@@ -143,9 +143,16 @@
 	<!-- replace this lookup with a key lookup -->
 	<xsl:variable name="node" select="key('nodeKey',@ref)" />
 	<xsl:text> </xsl:text>
-    <xsl:value-of select="round($dimensions/config:width - ( ($bound.east - $node/@lon ) * 10000 * $scale ))" />
-	<xsl:text>,</xsl:text>
-    <xsl:value-of select="round($dimensions/config:height + ( ($bound.south - $node/@lat) * 10000 * $scale * $dimensions/config:projection ))" />
+	<xsl:choose>
+		<xsl:when test="position()=last() and @ref=../nd[1]/@ref">
+			<xsl:text>z</xsl:text> <!-- this is certainly the nicest way to represent a closed path in SVG, but is it worth the computational expense? possibly, because the z may be a good hook for detecting areas, though can I get to it?? -->
+		</xsl:when>
+		<xsl:otherwise>
+			<xsl:value-of select="round($dimensions/config:width - ( ($bound.east - $node/@lon ) * 10000 * $scale ))" />
+			<xsl:text>,</xsl:text>
+			<xsl:value-of select="round($dimensions/config:height + ( ($bound.south - $node/@lat) * 10000 * $scale * $dimensions/config:projection ))" />
+		</xsl:otherwise>
+	</xsl:choose>
 </xsl:template>
 
 <xsl:template match="way" mode="defs">
