@@ -216,7 +216,7 @@
 		property="dcterms:title"
 		x="{$dimensions/config:width - ( ($bound.east - key('nodeKey',../nd[1]/@ref)/@lon ) * 10000 * $scale )}"
 		y="{$dimensions/config:height + ( ($bound.south - key('nodeKey',../nd[1]/@ref)/@lat) * 10000 * $scale * $dimensions/config:projection )}"
-		> <!-- FIXME: these pixel calcs for @x and @y should eventually be derived from a template-cum-function --> <!-- FIXME: refer RDFa note for true ways -->
+		> <!-- FIXME: these pixel calcs for @x and @y should eventually be derived from a template-cum-function; also they need to be based on a centroid --> <!-- FIXME: refer RDFa note for true ways -->
 		<xsl:value-of select="@v" />
 	</svg:text>
 </xsl:template>
