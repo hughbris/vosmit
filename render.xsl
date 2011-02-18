@@ -60,6 +60,8 @@
 <!-- will hardcode $scale to 1 until I understand better what it's scaling -->
 <xsl:param name="scale" select="1" />
 
+<xsl:key name="nodeKey" match="node" use="@id" />
+
 <xsl:variable name="dimensionsDocument">
 	<xsl:apply-templates select="/osm/bounds" mode="dimensions">
 		<xsl:with-param name="minimumMapWidth" select="$minimumMapWidth" />
@@ -139,8 +141,7 @@
 
 <xsl:template match="way/nd" mode="path">
 	<!-- replace this lookup with a key lookup -->
-	<xsl:variable name="ref" select="@ref" />
-	<xsl:variable name="node" select="/osm/node[@id=$ref]" />
+	<xsl:variable name="node" select="key('nodeKey',@ref)" />
 	<xsl:text> </xsl:text>
     <xsl:value-of select="round($dimensions/config:width - ( ($bound.east - $node/@lon ) * 10000 * $scale ))" />
 	<xsl:text>,</xsl:text>
