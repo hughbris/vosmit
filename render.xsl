@@ -177,30 +177,47 @@
 	</svg:path>
 </xsl:template>
 
-<xsl:template match="way[not(nd[1]/@ref = nd[last()]/@ref)]" mode="testing">
+<!-- (true) ways, depends on more specific match template for areas -->
+<xsl:template match="way" mode="testing">
 	<svg:g id="wy{@id}" class="way">
 		<!-- TODO: we want to associate the OSM object URI here for sure -->
 		<!-- TODO: further rdfa metadata here from tags -->
 		<svg:use xlink:href="#obj{@id}" class="line test ed{@changeset}" />
-		<!-- <xsl:apply-templates select="tag[@k='name']" mode="label" /> --> <!-- label -->
+		<!-- <xsl:apply-templates select="tag[@k='name']" mode="label" /> --> <!-- label --> <!-- FIXME: invoking the label here leads to overlaying problems from the order of svg elements -->
 	</svg:g>
 </xsl:template>
 
+<!-- area "ways" -->
 <xsl:template match="way[nd[1]/@ref = nd[last()]/@ref]" mode="testing">
 	<svg:g id="wy{@id}" class="area">
 		<!-- TODO: we want to associate the OSM object URI here for sure -->
 		<!-- TODO: further rdfa metadata here from tags -->
 		<svg:use xlink:href="#obj{@id}" class="line test ed{@changeset}" />
-		<!-- <xsl:apply-templates select="tag[@k='name']" mode="label" /> --> <!-- label -->
+		<xsl:apply-templates select="tag[@k='name']" mode="label" /> <!-- label --> <!-- FIXME: invoking the label here leads to overlaying problems from the order of svg elements -->
 	</svg:g>
 </xsl:template>
 
+<!-- (true) way labels, depends on more specific match template for area labels -->
 <xsl:template match="way/tag" mode="label">
 	<!-- TODO: lots: offset it/overlay it, scale it -->
 	<svg:text class="label test" about="#wy{../@id}">
 		<svg:textPath xlink:href="#obj{../@id}" property="dcterms:title"> <!-- FIXME: what knowledge I once had of RDFa and its context rules are out the window, this is likely wrong -->
 			<xsl:value-of select="@v" />
 		</svg:textPath>
+	</svg:text>
+</xsl:template>
+
+<!-- area "ways" labels -->
+<xsl:template match="way[nd[1]/@ref = nd[last()]/@ref]/tag" mode="label">
+	<!-- TODO: lots: position it, scale it -->
+	<svg:text
+		class="label test"
+		about="#wy{../@id}"
+		property="dcterms:title"
+		x="{$dimensions/config:width - ( ($bound.east - key('nodeKey',../nd[1]/@ref)/@lon ) * 10000 * $scale )}"
+		y="{$dimensions/config:height + ( ($bound.south - key('nodeKey',../nd[1]/@ref)/@lat) * 10000 * $scale * $dimensions/config:projection )}"
+		> <!-- FIXME: these pixel calcs for @x and @y should eventually be derived from a template-cum-function --> <!-- FIXME: refer RDFa note for true ways -->
+		<xsl:value-of select="@v" />
 	</svg:text>
 </xsl:template>
 
