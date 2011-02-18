@@ -102,6 +102,9 @@
 				font-size: 6px;
 				font-variant: small-caps;
 			}
+			.area .line.test {
+				fill: orange;
+			}
 		</svg:style>
 
 		<!-- insert metadata here: src, title, coverage (duh) etc -->
@@ -174,8 +177,17 @@
 	</svg:path>
 </xsl:template>
 
-<xsl:template match="way" mode="testing">
+<xsl:template match="way[not(nd[1]/@ref = nd[last()]/@ref)]" mode="testing">
 	<svg:g id="wy{@id}" class="way">
+		<!-- TODO: we want to associate the OSM object URI here for sure -->
+		<!-- TODO: further rdfa metadata here from tags -->
+		<svg:use xlink:href="#obj{@id}" class="line test ed{@changeset}" />
+		<!-- <xsl:apply-templates select="tag[@k='name']" mode="label" /> --> <!-- label -->
+	</svg:g>
+</xsl:template>
+
+<xsl:template match="way[nd[1]/@ref = nd[last()]/@ref]" mode="testing">
+	<svg:g id="wy{@id}" class="area">
 		<!-- TODO: we want to associate the OSM object URI here for sure -->
 		<!-- TODO: further rdfa metadata here from tags -->
 		<svg:use xlink:href="#obj{@id}" class="line test ed{@changeset}" />
