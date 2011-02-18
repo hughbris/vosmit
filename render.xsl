@@ -5,11 +5,10 @@
     description: refer README.txt for now
 
 	TODO: immediate plans:
-	- filter/correct params
 	- get correct proportions for canvas
-	- draw nodes as basic lines
-	- draw ways as basic lines
-	- play with photo underlays and compare
+	/ draw nodes as basic points
+	/ draw ways as basic lines
+	. play with photo underlays and compare
 	- experiment with customisation frameworks (css, icons etc)
 	- play with interactivity
 	- play with put/post
