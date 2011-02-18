@@ -193,7 +193,7 @@
 		<!-- TODO: we want to associate the OSM object URI here for sure -->
 		<!-- TODO: further rdfa metadata here from tags -->
 		<svg:use xlink:href="#obj{@id}" class="line test ed{@changeset}" />
-		<xsl:apply-templates select="tag[@k='name']" mode="label" /> <!-- label --> <!-- FIXME: invoking the label here leads to overlaying problems from the order of svg elements -->
+		<!-- <xsl:apply-templates select="tag[@k='name']" mode="label" /> --> <!-- label --> <!-- FIXME: invoking the label here leads to overlaying problems from the order of svg elements -->
 	</svg:g>
 </xsl:template>
 
