@@ -104,8 +104,12 @@
 				font-size: 6px;
 				font-variant: small-caps;
 			}
+			/* generic/fallback fill for areas */
 			.area .line.test {
-				fill: orange;
+				fill: orange; /* let's just make it ugly for now */
+			}
+			.area.osmkv-leisure\=park .line.test {
+				fill: green;
 			}
 		</svg:style>
 
@@ -191,7 +195,11 @@
 
 <!-- area "ways" -->
 <xsl:template match="way[nd[1]/@ref = nd[last()]/@ref]" mode="testing">
-	<svg:g id="wy{@id}" class="area">
+	<svg:g id="wy{@id}">
+		<xsl:attribute name="class">
+			<xsl:text>area</xsl:text>
+			<xsl:apply-templates select="tag" mode="classname" />
+		</xsl:attribute>
 		<!-- TODO: we want to associate the OSM object URI here for sure -->
 		<!-- TODO: further rdfa metadata here from tags -->
 		<svg:use xlink:href="#obj{@id}" class="line test ed{@changeset}" />
@@ -221,6 +229,28 @@
 		> <!-- FIXME: these pixel calcs for @x and @y should eventually be derived from a template-cum-function; also they need to be based on a centroid --> <!-- FIXME: refer RDFa note for true ways -->
 		<xsl:value-of select="@v" />
 	</svg:text>
+</xsl:template>
+
+<xsl:template match="tag[not(@k='name' or @k='source' or @k='note' or contains(@v,' '))]" mode="classname"> <!-- CHECKME: this might end up being in the default processing mode -->
+	<xsl:text> </xsl:text>
+	<xsl:apply-templates select="@k" mode="classname" />
+	<xsl:text> </xsl:text>
+	<xsl:apply-templates select="@v" mode="classname" />
+	<xsl:text> osmkv-</xsl:text> <!-- need to pair the key-values, too -->
+	<xsl:value-of select="@k" /> <!-- might need to escape this, depending on rules -->
+	<xsl:text>=</xsl:text> <!-- CHECKME: is this actually legal and widely supported? -->
+	<xsl:value-of select="@v" /> <!-- need to escape this -->
+</xsl:template>
+
+<xsl:template match="tag/@k" mode="classname">
+	<xsl:text>osmk-</xsl:text>
+	<xsl:value-of select="." /> <!-- might need to escape this, depending on rules -->
+</xsl:template>
+
+<xsl:template match="tag/@v" mode="classname">
+	<!-- TODO: split any values delimited by ";" because of the moronic constraint in the tag model -->
+	<xsl:text>osmv-</xsl:text>
+	<xsl:value-of select="." /> <!-- need to escape this -->
 </xsl:template>
 
 </xsl:transform>
