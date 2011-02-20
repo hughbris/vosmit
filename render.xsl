@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-
+<!-- <?xml-stylesheet type="text/css" href="style.css" ?> --> <!-- should work, but not in FF4, which I am developing with :~( -->
 <!--
 
     description: refer README.txt for now
@@ -59,8 +59,9 @@
 <xsl:param name="minimumMapHeight" select="3" /> <!-- kilometres -->
 <!-- **************************** -->
 
-<!-- will hardcode $scale to 1 until I understand better what it's scaling -->
-<xsl:param name="scale" select="1" />
+<!-- hardcoding $scale until I better figure how this thing might be invoked. This fits my desktop screen nicely -->
+<!-- http://wiki.openstreetmap.org/wiki/Osmarender/Options#scale -->
+<xsl:param name="scale" select="3.5" />
 
 <xsl:key name="nodeKey" match="node" use="@id" />
 
@@ -88,92 +89,28 @@
 		height="{$dimensions/config:svgHeight}px"
 	>
 
-		<!-- FIXME: try to farm this out to an external file or do something clever to import it so it's not embedded here (actually that's really important) -->
-		<svg:style type="text/css">
-			.node.test {
-				fill: red;
-			}
-			.label.test {
-				fill: blue;
-			}
-			.way {
-				fill: none;
-			}
-			.way .line.test {
-				stroke: pink;
-			}
-			.way.osmkv-highway\=primary .line.test {
-				stroke: red;
-				stroke-width: 2;
-			}
-			.way.osmkv-highway\=secondary .line.test {
-				stroke: turquoise;
-				stroke-width: 1.5;
-			}
-			.way.osmkv-highway\=tertiary .line.test {
-				stroke: darkorange;
-				stroke-width: 1.5;
-			}
-			.way.osmkv-highway\=residential .line.test {
-				stroke: teal;
-			}
-			.way.osmkv-highway\=pedestrian .line.test {
-				stroke: darkgray;
-			}
-			.way.osmkv-highway\=footway .line.test, .way.osmkv-highway\=service .line.test, .way.osmkv-highway\=cycleway .line.test {
-				stroke: brown;
-			}
-			.way.osmkv-highway\=cycleway .line.test {
-				stroke-dasharray: 2,1;
-			}
-			.way.osmkv-highway\=footway .line.test {
-				stroke-dasharray: 1,1;
-			}
-			.way.osmkv-waterway\=drain .line.test {
-				stroke: saddlebrown;
-			}
-			.way.osmkv-boundary\=administrative.osmkv-admin_level\=10 .line.test {
-				stroke: magenta;
-				stroke-dasharray: 1,1;
-			}
-			.way .label.test {
-				font-size: 6px;
-				font-variant: small-caps;
-			}
-			/* generic/fallback fill for areas */
-			.area .line.test {
-				fill: orange; /* let's just make it ugly for now */
-			}
-			.area.osmkv-leisure\=park .line.test {
-				fill: green;
-			}
-			.area.osmkv-building\=yes .line.test {
-				fill: gray;
-			}
-			.area.osmk-shop .line.test, .area.osmkv-landuse\=retail .line.test, .area.osmv-pharmacy .line.test {
-				fill: lightblue;
-			}
-			.area.osmkv-natural\=wood .line.test {
-				fill: #cc9;
-			}
-			.area.osmkv-landuse\=reservoir .line.test {
-				fill: #aac;
-			}
-			.area.osmk-sport .line.test {
-				fill: #c0c;
-			}
-			.area.osmkv-amenity\=parking .line.test {
-				fill: blue;
-			}
-		</svg:style>
+		<!-- TODO: these values and RDFa -->
+		<!--
+		<svg:title />
+		<svg:desc />
+		-->
+
+		<!-- <script xlink:href="../scripts/svg.js" type="application/ecmascript" /> -->
+
+		<svg:defs>
+
+			<!-- Styles -->
+			<!-- FIXME: this needs to be an external file (really important), but this solution is temporary at best. How will multiple/modular stylesheets be loaded? -->
+			<xsl:copy-of select="document('ui/styles/initial.svgstyle.xml')" />
+
+			<!-- define Paths for reuse -->
+			<xsl:apply-templates select="way" mode="defs" />
+
+		</svg:defs>
 
 		<!-- insert metadata here: src, title, coverage (duh) etc -->
 
 		<!-- <xsl:apply-templates select="node" mode="testing" /> --> <!-- test predicate [@changeset='655764'] -->
-
-		<svg:defs>
-			<xsl:apply-templates select="way" mode="defs" />
-		</svg:defs>
 
 		<xsl:apply-templates select="way" mode="testing" /> <!-- test predicate [@changeset='3756370'] -->
 
@@ -247,7 +184,7 @@
 		<!-- TODO: we want to associate the OSM object URI here for sure -->
 		<!-- TODO: further rdfa metadata here from tags -->
 		<svg:use xlink:href="#obj{@id}" class="line test ed{@changeset}" />
-		<!-- <xsl:apply-templates select="tag[@k='name']" mode="label" /> --> <!-- label --> <!-- FIXME: invoking the label here leads to overlaying problems from the order of svg elements -->
+		<xsl:apply-templates select="tag[@k='name']" mode="label" /> <!-- label --> <!-- FIXME: invoking the label here leads to overlaying problems from the order of svg elements -->
 	</svg:g>
 </xsl:template>
 

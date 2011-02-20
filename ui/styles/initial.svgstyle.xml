@@ -1,0 +1,137 @@
+<?xml version="1.0" ?>
+<!-- this is a fragment and won't validate as SVG -->
+<style xmlns="http://www.w3.org/2000/svg" type="text/css"><![CDATA[
+
+	/* **** Generic **** */
+	.label.test {
+		fill: blue;
+	}
+
+	/* **** Nodes **** */
+	.node.test {
+		fill: red;
+	}
+
+	/* **** Ways **** */
+	.way {
+		fill: none;
+	}
+	.way .line.test {
+		stroke: pink;
+	}
+
+	/* highways */
+	.way.osmkv-highway\=primary
+	 .line.test {
+		stroke: red;
+		stroke-width: 2;
+	}
+	.way.osmkv-highway\=secondary
+	 .line.test {
+		stroke: turquoise;
+		stroke-width: 1.5;
+	}
+	.way.osmkv-highway\=tertiary
+	 .line.test {
+		stroke: darkorange;
+		stroke-width: 1.5;
+	}
+	.way.osmkv-highway\=residential
+	 .line.test {
+		stroke: teal;
+	}
+	.way.osmkv-highway\=pedestrian
+	 .line.test {
+		stroke: darkgray;
+	}
+	.way.osmkv-highway\=footway
+	 .line.test,
+	.way.osmkv-highway\=service
+	 .line.test,
+	.way.osmkv-highway\=cycleway
+	 .line.test {
+		stroke: brown;
+	}
+	.way.osmkv-highway\=cycleway
+	 .line.test {
+		stroke-dasharray: 2,1;
+	}
+	.way.osmkv-highway\=footway
+	 .line.test {
+		stroke-dasharray: 1,1;
+	}
+
+	/* waterways */
+	.way.osmkv-waterway\=drain
+	 .line.test {
+		stroke: saddlebrown;
+	}
+
+	/* boundaries */
+	.way.osmkv-boundary\=administrative.osmkv-admin_level\=10
+	 .line.test {
+		stroke: magenta;
+		stroke-dasharray: 1,1;
+	}
+
+	/* way labels */
+	.way
+	 .label.test {
+		font-size: 10px;
+		font-family: 'Courier New', monospace;
+		font-variant: small-caps; /* FIXME: seems not to work in FF4 */
+	}
+
+
+	/* **** Areas **** */
+	/* generic/fallback fill for areas */
+	.area
+	 .line.test {
+		fill: orange; /* let's just make it ugly for now */
+	}
+
+	/* park / natural */
+	.area.osmkv-leisure\=park
+	 .line.test {
+		fill: green;
+	}
+	.area.osmkv-natural\=wood
+	 .line.test {
+		fill: #cc9;
+	}
+
+	/* buildings */
+	.area.osmkv-building\=yes
+	 .line.test {
+		fill: gray;
+	}
+
+	/* commercial */
+	.area.osmk-shop
+	 .line.test,
+	.area.osmkv-landuse\=retail
+	 .line.test,
+	.area.osmv-pharmacy
+	 .line.test {
+		fill: lightblue;
+	}
+
+	/* utility */
+	.area.osmkv-landuse\=reservoir
+	 .line.test {
+		fill: #aac;
+	}
+
+	/* sport */
+	.area.osmk-sport
+	 .line.test {
+		fill: #c0c;
+	}
+
+	/* parking */
+	.area.osmkv-amenity\=parking
+	 .line.test {
+		fill: blue;
+	}
+]]></style>
+
