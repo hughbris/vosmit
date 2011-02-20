@@ -111,6 +111,24 @@
 			.area.osmkv-leisure\=park .line.test {
 				fill: green;
 			}
+			.area.osmkv-building\=yes .line.test {
+				fill: gray;
+			}
+			.area.osmk-shop .line.test, .area.osmkv-landuse\=retail .line.test, .area.osmv-pharmacy .line.test {
+				fill: lightblue;
+			}
+			.area.osmkv-natural\=wood .line.test {
+				fill: #cc9;
+			}
+			.area.osmkv-landuse\=reservoir .line.test {
+				fill: #aac;
+			}
+			.area.osmk-sport .line.test {
+				fill: #c0c;
+			}
+			.area.osmkv-amenity\=parking .line.test {
+				fill: blue;
+			}
 		</svg:style>
 
 		<!-- insert metadata here: src, title, coverage (duh) etc -->
@@ -194,7 +212,7 @@
 </xsl:template>
 
 <!-- area "ways" -->
-<xsl:template match="way[nd[1]/@ref = nd[last()]/@ref]" mode="testing">
+<xsl:template match="way[(tag/@k = 'area' and tag/@v = 'yes') or (nd[1]/@ref = nd[last()]/@ref and not(tag/@v='roundabout'))]" mode="testing"> <!-- CHECKME: is the tag value enough to pick out roundabouts? -->
 	<svg:g id="wy{@id}">
 		<xsl:attribute name="class">
 			<xsl:text>area</xsl:text>
@@ -218,7 +236,7 @@
 </xsl:template>
 
 <!-- area "ways" labels -->
-<xsl:template match="way[nd[1]/@ref = nd[last()]/@ref]/tag" mode="label">
+<xsl:template match="way[(tag/@k = 'area' and tag/@v = 'yes') or (nd[1]/@ref = nd[last()]/@ref and not(tag/@v='roundabout'))]/tag" mode="label"> <!-- CHECKME: is the tag value enough to pick out roundabouts? -->
 	<!-- TODO: lots: position it, scale it -->
 	<svg:text
 		class="label test"
