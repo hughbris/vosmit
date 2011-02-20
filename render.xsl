@@ -96,9 +96,45 @@
 			.label.test {
 				fill: blue;
 			}
-			.way .line.test {
+			.way {
 				fill: none;
+			}
+			.way .line.test {
 				stroke: pink;
+			}
+			.way.osmkv-highway\=primary .line.test {
+				stroke: red;
+				stroke-width: 2;
+			}
+			.way.osmkv-highway\=secondary .line.test {
+				stroke: turquoise;
+				stroke-width: 1.5;
+			}
+			.way.osmkv-highway\=tertiary .line.test {
+				stroke: darkorange;
+				stroke-width: 1.5;
+			}
+			.way.osmkv-highway\=residential .line.test {
+				stroke: teal;
+			}
+			.way.osmkv-highway\=pedestrian .line.test {
+				stroke: darkgray;
+			}
+			.way.osmkv-highway\=footway .line.test, .way.osmkv-highway\=service .line.test, .way.osmkv-highway\=cycleway .line.test {
+				stroke: brown;
+			}
+			.way.osmkv-highway\=cycleway .line.test {
+				stroke-dasharray: 2,1;
+			}
+			.way.osmkv-highway\=footway .line.test {
+				stroke-dasharray: 1,1;
+			}
+			.way.osmkv-waterway\=drain .line.test {
+				stroke: saddlebrown;
+			}
+			.way.osmkv-boundary\=administrative.osmkv-admin_level\=10 .line.test {
+				stroke: magenta;
+				stroke-dasharray: 1,1;
 			}
 			.way .label.test {
 				font-size: 6px;
@@ -203,7 +239,11 @@
 
 <!-- (true) ways, depends on more specific match template for areas -->
 <xsl:template match="way" mode="testing">
-	<svg:g id="wy{@id}" class="way">
+	<svg:g id="wy{@id}">
+		<xsl:attribute name="class">
+			<xsl:text>way</xsl:text>
+			<xsl:apply-templates select="tag" mode="classname" />
+		</xsl:attribute>
 		<!-- TODO: we want to associate the OSM object URI here for sure -->
 		<!-- TODO: further rdfa metadata here from tags -->
 		<svg:use xlink:href="#obj{@id}" class="line test ed{@changeset}" />
